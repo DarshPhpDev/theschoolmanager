@@ -5,7 +5,9 @@ Vue.use(Vuex);
 const state = {
     sidebarShow: "responsive",
     sidebarMinimize: false,
-    logedIn: false
+    loggedIn: localStorage.token ? true : false,
+    token: localStorage.token,
+    api_url: "http://school.test/api"
 };
 
 const mutations = {
@@ -19,10 +21,24 @@ const mutations = {
     },
     set(state, [variable, value]) {
         state[variable] = value;
+    },
+    SET_loggedIn(state, payload) {
+        state.loggedIn = payload;
     }
 };
-
+const getters = {
+    get_loggedIn(state) {
+        return state.loggedIn;
+    },
+    getApiUrl(state) {
+        return state.api_url;
+    },
+    getToken(state) {
+        return state.token;
+    }
+}
 export default new Vuex.Store({
     state,
-    mutations
+    mutations,
+    getters
 });

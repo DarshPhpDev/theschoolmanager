@@ -15,7 +15,7 @@
     <CDropdownHeader tag="div" class="text-center" color="light">
       <strong>Account</strong>
     </CDropdownHeader>
-    <CDropdownItem>
+    <!--<CDropdownItem>
       <CIcon name="cil-bell" /> Updates
       <CBadge color="info" class="ml-auto">{{ itemsCount }}</CBadge>
     </CDropdownItem>
@@ -47,18 +47,39 @@
     <CDropdownDivider />
     <CDropdownItem>
       <CIcon name="cil-shield-alt" /> Lock Account
-    </CDropdownItem>
-    <CDropdownItem> <CIcon name="cil-lock-locked" /> Logout </CDropdownItem>
+    </CDropdownItem>-->
+    <CDropdownItem @click.prevent="logout"> <CIcon name="cil-lock-locked" /> Logout </CDropdownItem>
   </CDropdown>
 </template>
 
 <script>
+import axios from "axios";
+import { mapGetters } from "vuex";
 export default {
   name: "TheHeaderDropdownAccnt",
   data() {
     return {
       itemsCount: 42
     };
+  },
+  methods:{
+    logout(){
+      axios.get(this.getApiUrl+'/logout',{
+        headers:{
+          Authorization:"Bearer "+localStorage.token
+        }
+      }).then(res => {
+        //console.log(res);
+        if (!res.data.status.error) {
+          localStorage.clear()
+          this.$router.push("/login")
+        }
+        
+      })
+    }
+  },
+  computed: {
+    ...mapGetters(["getApiUrl"])
   }
 };
 </script>

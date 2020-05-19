@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-
+import store from "../store";
 // Containers
 const TheContainer = () =>
     import ("@/containers/TheContainer");
@@ -106,15 +106,38 @@ export default new Router({
 
 function configRoutes() {
     return [{
+            path: "/login",
+            name: "Login",
+            component: Login,
+            beforeEnter: (to, from, next) => {
+                if (store.state.loggedIn) {
+                    next({
+                        path: "/"
+                    });
+                } else {
+                    next();
+                }
+            }
+        }, {
             path: "/",
             redirect: "/dashboard",
             name: "Home",
             component: TheContainer,
+            beforeEnter: (to, from, next) => {
+                if (!store.state.loggedIn) {
+                    next({
+                        path: "/login"
+                    });
+                } else {
+                    next();
+                }
+            },
             children: [{
                     path: "dashboard",
                     name: "Dashboard",
                     component: Dashboard
                 },
+
                 {
                     path: "theme",
                     redirect: "/theme/colors",
@@ -136,6 +159,8 @@ function configRoutes() {
                         }
                     ]
                 },
+
+
                 {
                     path: "charts",
                     name: "Charts",
@@ -347,15 +372,20 @@ function configRoutes() {
                 }
             ]
         },
-        {
-            path: "/login",
-            name: "Login",
-            component: Login
-        },
+
         {
             path: "/pages",
             redirect: "/pages/404",
             name: "Pages",
+            beforeEnter: (to, from, next) => {
+                if (!store.state.loggedIn) {
+                    next({
+                        path: "/login"
+                    });
+                } else {
+                    next();
+                }
+            },
             component: {
                 render(c) {
                     return c("router-view");
@@ -370,11 +400,6 @@ function configRoutes() {
                     path: "500",
                     name: "Page500",
                     component: Page500
-                },
-                {
-                    path: "login",
-                    name: "Login",
-                    component: Login
                 },
                 {
                     path: "register",

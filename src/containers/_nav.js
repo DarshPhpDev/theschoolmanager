@@ -101,15 +101,15 @@ export default [{
                 {
                     name: "Tables",
                     to: "/base/tables"
+                },
+                {
+                    name: "Tabs",
+                    to: "/base/tabs"
+                },
+                {
+                    name: "Tooltips",
+                    to: "/base/tooltips"
                 }
-                // {
-                //   name: "Tabs",
-                //   to: "/base/tabs"
-                // },
-                // {
-                //   name: "Tooltips",
-                //   to: "/base/tooltips"
-                // }
             ]
         },
         // {

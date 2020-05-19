@@ -6,8 +6,14 @@
           <CCard class="p-4">
             <CCardBody>
               <CForm>
-                <h1>Login</h1>
+                                <h1>Login</h1>
                 <p class="text-muted">Sign In to your account</p>
+                <div  v-for="(error, index) in validation_errors" :key="index">
+                  <p v-for="(key, index) in error" :key="index">
+                    {{ key }}
+                  </p>
+                </div>
+
                 <CInput
                   placeholder="Username"
                   autocomplete="username email"
@@ -27,7 +33,7 @@
                 </CInput>
                 <CRow>
                   <CCol col="6" class="text-left">
-                    <CButton color="primary" class="px-4" @click="test"
+                    <CButton color="primary" class="px-4" @click="login"
                       >Login</CButton
                     >
                   </CCol>
@@ -66,6 +72,7 @@
 
 <script>
 import axios from "axios";
+import { mapGetters } from "vuex";
 export default {
   name: "Login",
   data() {
@@ -73,15 +80,37 @@ export default {
       user: {
         email: "",
         password: ""
-      }
+      },
+      validation_errors: [],
+      errorMsg: ""
     };
   },
   methods: {
-    test() {
-      axios.get("https://jsonplaceholder.typicode.com/todos/1").then(res => {
+    login() {
+      axios.post(this.getApiUrl + "/login", this.user)
+      .then(res => {
+        if (res.data.status.error) {
+          if (Object.keys(res.data.status.validation_errors).length > 0) {
+            this.validation_errors = res.data.status.validation_errors;
+          } else {
+            this.errorMsg = res.data.status.message;
+          }
+        } else {
+          localStorage.token = res.data.data.token;
+        }
+        this.$router.push("/")
         console.log(res);
-      });
+      })
+      .catch( err => {
+        console.log(err)
+      })
+
+
+      
     }
+  },
+  computed: {
+    ...mapGetters(["getApiUrl"])
   }
 };
 </script>
