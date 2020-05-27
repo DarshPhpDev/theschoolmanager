@@ -20,6 +20,12 @@ export default [{
                 //   text: "NEW"
                 // }
         },
+        {
+            _name: "CSidebarNavItem",
+            name: "users",
+            to: "/users",
+            icon: "cil-user"
+        },
         // {
         //   _name: "CSidebarNavTitle",
         //   _children: ["Theme"]

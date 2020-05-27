@@ -94,7 +94,8 @@ const Users = () =>
     import ("@/views/users/Users");
 const User = () =>
     import ("@/views/users/User");
-
+const New = () =>
+    import ("@/views/users/New");
 Vue.use(Router);
 
 export default new Router({
@@ -105,7 +106,7 @@ export default new Router({
 });
 
 function configRoutes() {
-    return [{
+    return [{ //login
             path: "/login",
             name: "Login",
             component: Login,
@@ -118,7 +119,7 @@ function configRoutes() {
                     next();
                 }
             }
-        }, {
+        }, { //dashboard
             path: "/",
             redirect: "/dashboard",
             name: "Home",
@@ -138,7 +139,7 @@ function configRoutes() {
                     component: Dashboard
                 },
 
-                {
+                /*{
                     path: "theme",
                     redirect: "/theme/colors",
                     name: "Theme",
@@ -158,10 +159,10 @@ function configRoutes() {
                             component: Typography
                         }
                     ]
-                },
+                },*/
 
 
-                {
+                /*{
                     path: "charts",
                     name: "Charts",
                     component: Charts
@@ -170,7 +171,7 @@ function configRoutes() {
                     path: "widgets",
                     name: "Widgets",
                     component: Widgets
-                },
+                },*/
                 {
                     path: "users",
                     meta: {
@@ -187,6 +188,11 @@ function configRoutes() {
                             component: Users
                         },
                         {
+                            path: "/new",
+                            name: "new",
+                            component: New
+                        },
+                        {
                             path: ":id",
                             meta: {
                                 label: "User Details"
@@ -195,6 +201,11 @@ function configRoutes() {
                             component: User
                         }
                     ]
+                },
+                {
+                    path: "/new/user",
+                    name: "new",
+                    component: New
                 },
                 {
                     path: "base",

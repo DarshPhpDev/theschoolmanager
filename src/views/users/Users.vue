@@ -1,15 +1,28 @@
 <template>
   <CRow>
-    <CCol col="12" xl="8">
+    <CCol col="12" xl="12">
       <CCard>
         <CCardHeader>
+          <CRow>
+            <CCol col="6" xl="6">
           Users
+          </CCol>
+          <CCol col="6" xl="6">
+          <CButton
+            color="success"
+            class="m-2"
+            @click.prevent="addnew()"
+          >
+            AddNew
+          </CButton>
+          </CCol>
+          </CRow>
         </CCardHeader>
         <CCardBody>
           <CDataTable
             hover
             striped
-            :items="items"
+            :items="usersapi"
             :fields="fields"
             :items-per-page="5"
             clickable-rows
@@ -30,22 +43,27 @@
       </CCard>
     </CCol>
   </CRow>
+  
 </template>
 
 <script>
 import usersData from "./UsersData";
+import axios from "axios";
+import { mapGetters } from "vuex";
 export default {
   name: "Users",
   data() {
     return {
       items: usersData,
       fields: [
-        { key: "username", label: "Name", _classes: "font-weight-bold" },
-        { key: "registered" },
-        { key: "role" },
-        { key: "status" }
+        { key: "name", label: "Name", _classes: "font-weight-bold" },
+        { key: "email", label: "Email", _classes: "font-weight-bold" },
+        { key: "created_at", label: "Registered" }
+        //{ key: "role" },
+        //{ key: "status" }
       ],
-      activePage: 1
+      activePage: 1,
+      usersapi : []
     };
   },
   watch: {
@@ -74,10 +92,35 @@ export default {
       }
     },
     rowClicked(item, index) {
-      this.$router.push({ path: `users/${index + 1}` });
+      this.$router.push({ path: `users/${item.id}` });
     },
     pageChange(val) {
       this.$router.push({ query: { page: val } });
+    },
+    addnew(){
+      this.$router.push('/new/user');
+    }
+  },
+  computed: {
+    ...mapGetters(["getApiUrl"]),
+    getUsers() {
+      axios.get(this.getApiUrl + "/get_users")
+      .then(res => {
+        if (res.data.status.error) {
+         console.log(res)
+        } else {
+          this.usersapi = res.data.data.users
+        console.log(usersapi);
+        }
+        
+        
+      })
+      .catch( err => {
+        console.log(err)
+      })
+
+
+      
     }
   }
 };
